@@ -1,5 +1,4 @@
 # flask for backend
-Python==3.10.11
 Flask==3.1.0
 Werkzeug==3.1.3
 
