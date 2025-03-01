@@ -70,16 +70,18 @@ export default function PanditRegistrationForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      console.log("Submitting registration form:", values); 
+      console.log("Submitting registration form:", values);
   
-      const response = await axios.post("http://127.0.0.1:5000/register", values, {
+      const response = await axios.post("http://127.0.0.1:5000/register", {
+        ...values, 
+        role: "pandit"  // ✅ Ensure role is explicitly set
+      }, {
         headers: { "Content-Type": "application/json" },
       });
   
-      console.log("Server Response:", response.data); 
+      console.log("Server Response:", response.data);
   
       if (response.status === 201) {
-
         localStorage.setItem("user_id", response.data.user_id);
         localStorage.setItem("role", response.data.role);
   
@@ -87,7 +89,7 @@ export default function PanditRegistrationForm() {
           id: response.data.user_id,
           name: values.name,
           email: values.email,
-          role: "pandit", // Assuming only Pandits register here
+          role: "pandit",  // ✅ Ensure consistency
         });
   
         toast.success("Registration successful", {
@@ -97,7 +99,7 @@ export default function PanditRegistrationForm() {
         router.push("/dashboard/pandit");
       }
     } catch (error) {
-      toast.error("Registration failed", {
+        toast.error("Registration failed", {
         description: "There was an error creating your account. Please try again.",
       })
     } finally {
