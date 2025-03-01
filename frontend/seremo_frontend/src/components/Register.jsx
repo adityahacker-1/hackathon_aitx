@@ -38,7 +38,7 @@ const Register = () => {
     <>
       <RegisterNavbar />
       <div className="max-w-md mx-auto mt-10 p-6 shadow-lg bg-white rounded">
-        <h2 className="text-center text-2xl font-bold">Register</h2>
+        <h2 className="text-center text-2xl font-bold text-black">Register</h2>
         {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input type="text" name="username" placeholder="Username" onChange={handleChange} required className="input input-bordered w-full" />
