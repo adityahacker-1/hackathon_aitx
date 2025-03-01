@@ -25,7 +25,6 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# User Registration API
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
@@ -36,7 +35,6 @@ def register():
     db.session.commit()
     return jsonify({"message": f"User {data['role']} registered successfully"}), 201
 
-# User Login API
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -47,13 +45,11 @@ def login():
         return jsonify({"message": "Login successful", "role": user.role}), 200
     return jsonify({"message": "Invalid credentials"}), 401
 
-# Dashboard Route
 @app.route('/dashboard', methods=['GET'])
 @login_required
 def dashboard():
     return jsonify({"message": f"Welcome, {current_user.username}!", "role": current_user.role})
 
-# Logout API
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
