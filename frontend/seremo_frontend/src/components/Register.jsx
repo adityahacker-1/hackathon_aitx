@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Navbar from "./Navbar";
+import RegisterNavbar from "./RegisterNavbar";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const Register = () => {
 
   return (
     <>
-      <Navbar />
+      <RegisterNavbar />
       <div className="max-w-md mx-auto mt-10 p-6 shadow-lg bg-white rounded">
         <h2 className="text-center text-2xl font-bold">Register</h2>
         {errorMessage && <p className="text-red-500 text-center">{errorMessage}</p>}
@@ -50,6 +50,13 @@ const Register = () => {
           </select>
           <button type="submit" className="btn btn-primary w-full">Register</button>
         </form>
+
+        <p className="text-center mt-4 text-black">
+          Already an User?{" "}
+          <button onClick={() => navigate("/login")} className="text-blue-500 hover:underline">
+            Login here
+          </button>
+        </p>
       </div>
     </>
   );
