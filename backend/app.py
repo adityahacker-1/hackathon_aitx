@@ -5,7 +5,7 @@ from models import db
 from routes import user_routes
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend requests
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'your_secret_key'

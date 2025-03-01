@@ -8,7 +8,9 @@ const UserDashboard = () => {
 
   useEffect(() => {
     const userRole = localStorage.getItem("role");
+
     if (userRole !== "user") {
+      console.log("Invalid role, showing popup.");
       setShowPopup(true);
     }
   }, []);
@@ -17,7 +19,7 @@ const UserDashboard = () => {
     <>
       {showPopup && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-black p-6 rounded shadow-lg text-center">
+          <div className="bg-white p-6 rounded shadow-lg text-center">
             <h2 className="text-xl font-bold">Access Denied</h2>
             <p>You need to log in as a User to view this page.</p>
             <button className="btn btn-primary mt-4" onClick={() => navigate("/login")}>Go to Login</button>

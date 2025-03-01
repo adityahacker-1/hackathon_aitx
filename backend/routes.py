@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User
 
@@ -6,6 +7,7 @@ user_routes = Blueprint("user_routes", __name__)
 
 # Register User or Boss
 @user_routes.route('/register', methods=['POST'])
+@cross_origin()  # ✅ Fix: Ensure frontend can access API
 def register():
     data = request.json
     hashed_password = generate_password_hash(data['password'])
@@ -17,6 +19,7 @@ def register():
 
 # Login User or Boss
 @user_routes.route('/login', methods=['POST'])
+@cross_origin()  # ✅ Fix: Ensure frontend can access API
 def login():
     data = request.json
     user = User.query.filter_by(email=data['email']).first()

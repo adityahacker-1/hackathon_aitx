@@ -18,6 +18,9 @@ const handleSubmit = (formData, navigate, setErrorMessage) => {
 
         alert(response.data.message);
         navigate(response.data.role === "boss" ? "/boss-dashboard" : "/user-dashboard");
+      } else {
+        console.error("Unexpected Response:", response);
+        setErrorMessage("Unexpected error occurred. Please try again.");
       }
     } catch (error) {
       console.error("Login failed:", error.response ? error.response.data : error);

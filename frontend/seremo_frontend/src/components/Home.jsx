@@ -10,7 +10,7 @@ const Home = () => {
     console.log("Checking user role...");
     const role = localStorage.getItem("role");
 
-    if (!role) {
+    if (!role && window.location.pathname !== "/login") {
       console.log("No role found, redirecting...");
       navigate("/login");
     } else {
