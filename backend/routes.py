@@ -7,15 +7,38 @@ user_routes = Blueprint("user_routes", __name__)
 
 # Register User or Boss
 @user_routes.route('/register', methods=['POST'])
-@cross_origin()  # ✅ Fix: Ensure frontend can access API
+@cross_origin()  # ✅ Ensure frontend can access API
 def register():
     data = request.json
+
+    # ✅ Check if user already exists
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({"success": False, "message": "User with this email already exists"}), 400
+
+    if User.query.filter_by(phone=data['phone']).first():
+        return jsonify({"success": False, "message": "User with this phone number already exists"}), 400
+
     hashed_password = generate_password_hash(data['password'])
-    new_user = User(username=data['username'], email=data['email'], password=hashed_password, role=data['role'])
+    
+    new_user = User(
+        username=data['name'],  
+        email=data['email'],
+        password=hashed_password,
+        phone=data['phone'],  
+        location=data['location'],  
+        role=data.get('role', 'user')  
+    )
 
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": f"{data['role']} registered successfully"}), 201
+
+    return jsonify({
+        "success": True,
+        "message": "Registration successful",
+        "user_id": new_user.id,
+        "role": new_user.role
+    }), 201
+
 
 # Login User or Boss
 @user_routes.route('/login', methods=['POST'])
@@ -24,9 +47,19 @@ def login():
     data = request.json
     user = User.query.filter_by(email=data['email']).first()
     
-    if user and check_password_hash(user.password, data['password']):
-        return jsonify({"message": "Login successful", "role": user.role, "user_id": user.id}), 200
-    return jsonify({"message": "Invalid credentials"}), 401
+    if not user:
+        return jsonify({"success": False, "message": "User not found"}), 404  # ✅ More descriptive response
+
+    if not check_password_hash(user.password, data['password']):
+        return jsonify({"success": False, "message": "Incorrect password"}), 401  # ✅ Specific error message
+
+    return jsonify({
+        "success": True,
+        "message": "Login successful",
+        "user_id": user.id,
+        "name": user.username,  # ✅ Added name for frontend to display
+        "role": user.role
+    }), 200
 
 # Get User Profile (By ID)
 @user_routes.route('/user-profile/<int:user_id>', methods=['GET'])

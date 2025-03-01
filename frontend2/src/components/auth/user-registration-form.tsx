@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
 import { useAuth } from "@/components/auth/auth-provider"
+import axios from "axios";
+
 
 const formSchema = z
   .object({
@@ -44,23 +46,36 @@ export default function UserRegistrationForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      // In a real app, this would call an API endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
-
-      login({
-        id: "1",
-        name: values.name,
-        email: values.email,
-        role: "user",
-      })
-
-      toast.success("Registration successful", {
-        description: "Your account has been created successfully.",
-      })
-
-      router.push("/dashboard/user")
+      console.log("Submitting registration form:", values); // ✅ Debugging Log
+  
+      // ✅ Send registration request to Flask backend
+      const response = await axios.post("http://127.0.0.1:5000/register", values, {
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      console.log("Server Response:", response.data); // ✅ Debugging Log
+  
+      if (response.status === 201) {
+        // ✅ Store user session
+        localStorage.setItem("user_id", response.data.user_id);
+        localStorage.setItem("role", response.data.role);
+  
+        // ✅ Call login function from auth provider
+        login({
+          id: response.data.user_id,
+          name: values.name,
+          email: values.email,
+          role: "user", 
+        });
+  
+        toast.success("Registration successful", {
+          description: "Your account has been created successfully.",
+        });
+  
+        router.push("/dashboard/user");
+      }
     } catch (error) {
       toast.error("Registration failed", {
         description: "There was an error creating your account. Please try again.",

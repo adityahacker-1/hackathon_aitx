@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Chatbot from "@/components/landing/Chatbot"; // ✅ Import Chatbot Component
 
 export default function HeroSection() {
   return (
@@ -30,20 +30,14 @@ export default function HeroSection() {
               </Link>
             </div>
           </div>
+
+          {/* ✅ Add Chatbot Section Here */}
           <div className="flex items-center justify-center">
-            <div className="relative w-full max-w-[500px] h-[400px] rounded-lg overflow-hidden shadow-xl">
-              <Image
-                src="/placeholder.svg?height=400&width=500"
-                alt="Hindu ritual being performed virtually"
-                width={500}
-                height={400}
-                className="object-cover"
-              />
-            </div>
+            <Chatbot />
           </div>
+          {/* ✅ Chatbot Replaces the Placeholder Image */}
         </div>
       </div>
     </section>
-  )
+  );
 }
-

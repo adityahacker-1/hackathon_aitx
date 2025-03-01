@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 import { useAuth } from "@/components/auth/auth-provider"
+import axios from "axios";
 
 const formSchema = z
   .object({
@@ -67,23 +68,34 @@ export default function PanditRegistrationForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      // In a real app, this would call an API endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
+      console.log("Submitting registration form:", values); 
+  
+      const response = await axios.post("http://127.0.0.1:5000/register", values, {
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      console.log("Server Response:", response.data); 
+  
+      if (response.status === 201) {
 
-      login({
-        id: "1",
-        name: values.name,
-        email: values.email,
-        role: "pandit",
-      })
-
-      toast.success("Registration successful", {
-        description: "Your account has been created successfully. It will be reviewed by our team.",
-      })
-
-      router.push("/dashboard/pandit")
+        localStorage.setItem("user_id", response.data.user_id);
+        localStorage.setItem("role", response.data.role);
+  
+        login({
+          id: response.data.user_id,
+          name: values.name,
+          email: values.email,
+          role: "pandit", // Assuming only Pandits register here
+        });
+  
+        toast.success("Registration successful", {
+          description: "Your account has been created successfully. It will be reviewed by our team.",
+        });
+  
+        router.push("/dashboard/pandit");
+      }
     } catch (error) {
       toast.error("Registration failed", {
         description: "There was an error creating your account. Please try again.",

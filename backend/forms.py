@@ -5,9 +5,9 @@ from wtforms.validators import InputRequired, Email, Length
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[InputRequired(), Length(min=3, max=50)])
     email = StringField("Email", validators=[InputRequired(), Email()])
-    password = PasswordField("Password", validators=[InputRequired(), Length(min=6)])
-    role = SelectField("Role", choices=[("user", "User"), ("boss", "Boss")])
+    password = PasswordField("Password", validators=[InputRequired(), Length(min=8)])  # ✅ Ensure minimum 8 characters to match frontend
+    role = SelectField("Role", choices=[("user", "User"), ("boss", "Boss")])  # ✅ Ensures role naming consistency
 
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[InputRequired(), Email()])
-    password = PasswordField("Password", validators=[InputRequired()])
+    password = PasswordField("Password", validators=[InputRequired(), Length(min=8)])  # ✅ Matches frontend password validation

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { useAuth } from "@/components/auth/auth-provider"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import axios from "axios"
 
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -32,32 +33,42 @@ export default function LoginForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      // In a real app, this would call an API endpoint
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate API call
-
-      login({
-        id: "1",
-        name: userType === "user" ? "John Doe" : "Pandit Sharma",
-        email: values.email,
-        role: userType,
-      })
-
-      toast.success("Login successful", {
-        description: `Welcome back, ${userType === "user" ? "John Doe" : "Pandit Sharma"}!`,
-      })
-
-      // Redirect based on user type
-      router.push(userType === "user" ? "/dashboard/user" : "/dashboard/pandit")
+      console.log("Login form submitted:", values); // ✅ Debugging Log
+  
+      // ✅ Send login request to Flask backend
+      const response = await axios.post("http://127.0.0.1:5000/login", values, {
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      console.log("Server Response:", response.data); // ✅ Debugging Log
+  
+      if (response.status === 200) {
+        // ✅ Store user session
+        localStorage.setItem("user_id", response.data.user_id);
+        localStorage.setItem("role", response.data.role);
+  
+        // ✅ Call login function from auth provider
+        // login({id: response.data.user_id, email: values.email,role: response.data.role});
+  
+        // ✅ Show success toast
+        toast.success("Login successful", {
+          description: `Welcome back, ${response.data.role === "user" ? "User" : "Boss"}!`,
+        });
+  
+        // ✅ Redirect based on user role
+        router.push(response.data.role === "boss" ? "/dashboard/boss" : "/dashboard/user");
+      }
     } catch (error) {
-      toast.error("Login failed", {
-        description: "Please check your credentials and try again.",
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
+        toast.error("Login failed", {
+          description: "There was an error login into your account. Please try again.",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+}
+  
 
   return (
     <div className="space-y-6">
