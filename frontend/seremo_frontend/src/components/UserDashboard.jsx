@@ -11,7 +11,7 @@ const UserDashboard = () => {
     if (userRole !== "user") {
       setShowPopup(true);
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <>

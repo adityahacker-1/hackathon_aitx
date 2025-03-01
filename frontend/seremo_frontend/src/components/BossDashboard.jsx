@@ -11,7 +11,7 @@ const BossDashboard = () => {
     if (userRole !== "boss") {
       setShowPopup(true);
     }
-  }, [navigate]);
+  }, []);
 
   return (
     <>

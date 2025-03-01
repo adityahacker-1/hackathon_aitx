@@ -3,23 +3,25 @@ import axios from "axios";
 const handleSubmit = (formData, navigate, setErrorMessage) => {
   return async (e) => {
     e.preventDefault();
+    console.log("Login form submitted:", formData); // ✅ Debugging Log
+
     try {
-      const response = await axios.post("http://127.0.0.1:5000/login", formData);
+      const response = await axios.post("http://127.0.0.1:5000/login", formData, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      console.log("Server Response:", response.data); // ✅ Debugging Log
 
       if (response.status === 200) {
-        localStorage.setItem("user_id", response.data.user_id); // Store user ID in local storage
-        localStorage.setItem("role", response.data.role); // Store role
-        alert(response.data.message);
+        localStorage.setItem("user_id", response.data.user_id);
+        localStorage.setItem("role", response.data.role);
 
-        // Redirect user based on role
-        if (response.data.role === "boss") {
-          navigate("/boss-dashboard");
-        } else {
-          navigate("/user-dashboard");
-        }
+        alert(response.data.message);
+        navigate(response.data.role === "boss" ? "/boss-dashboard" : "/user-dashboard");
       }
     } catch (error) {
-      setErrorMessage("Invalid email or password! Please try again.");
+      console.error("Login failed:", error.response ? error.response.data : error);
+      setErrorMessage("Invalid credentials! Please try again.");
     }
   };
 };

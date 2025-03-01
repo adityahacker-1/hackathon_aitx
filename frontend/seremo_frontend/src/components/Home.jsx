@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
 import HomeNavbar from "./Homenavbar";
 
 const Home = () => {
@@ -8,13 +7,17 @@ const Home = () => {
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
+    console.log("Checking user role...");
     const role = localStorage.getItem("role");
+
     if (!role) {
+      console.log("No role found, redirecting...");
       navigate("/login");
     } else {
+      console.log("User role found:", role);
       setUserRole(role);
     }
-  }, [navigate]);
+  }, []); // ✅ Prevents infinite re-renders
 
   return (
     <>
@@ -22,9 +25,13 @@ const Home = () => {
       <div className="text-center mt-10">
         <h1 className="text-2xl font-bold">Welcome to Home Page</h1>
         {userRole === "boss" ? (
-          <button className="btn btn-primary" onClick={() => navigate("/boss-dashboard")}>Go to Boss Dashboard</button>
+          <button className="btn btn-primary" onClick={() => navigate("/boss-dashboard")}>
+            Go to Boss Dashboard
+          </button>
         ) : (
-          <button className="btn btn-primary" onClick={() => navigate("/user-dashboard")}>Go to User Dashboard</button>
+          <button className="btn btn-primary" onClick={() => navigate("/user-dashboard")}>
+            Go to User Dashboard
+          </button>
         )}
       </div>
     </>
