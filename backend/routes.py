@@ -36,13 +36,21 @@ def chat():
     return jsonify({"response": response.completion_message.content})
 
 
-# ✅ User Registration API
 @user_routes.route('/register', methods=['POST'])
 @cross_origin()
 def register():
     data = request.json
 
-    # ✅ Check if user already exists
+
+    role = data.get('role', 'user')
+    if role not in ['user', 'pandit']:
+        return jsonify({"success": False, "message": "Invalid role provided!"}), 400
+
+
+    if not data.get('phone') or not data.get('location'):
+        return jsonify({"success": False, "message": "Phone and location are required!"}), 400
+
+
     if User.query.filter_by(email=data['email']).first():
         return jsonify({"success": False, "message": "User with this email already exists"}), 400
 
@@ -52,7 +60,9 @@ def register():
         username=data['name'],  
         email=data['email'],
         password=hashed_password,
-        role=data.get('role', 'user')  
+        phone=data['phone'],  
+        location=data['location'],  
+        role=role  # ✅ Explicitly set the role from frontend
     )
 
     db.session.add(new_user)
