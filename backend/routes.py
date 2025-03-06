@@ -6,7 +6,7 @@ import os
 
 user_routes = Blueprint("user_routes", __name__)
 
-@user_routes.route('/register', methods=['POST'])
+@user_routes.route('/api/register', methods=['POST'])
 @cross_origin()
 def register():
     data = request.json
@@ -36,7 +36,12 @@ def register():
     )
 
     db.session.add(new_user)
-    db.session.commit()
+    
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": f"Database error: {str(e)}"}), 500
 
     return jsonify({
         "success": True,
@@ -47,7 +52,7 @@ def register():
 
 
 # ✅ User Login API
-@user_routes.route('/login', methods=['POST'])
+@user_routes.route('/api/login', methods=['POST'])
 @cross_origin()
 def login():
     data = request.json
@@ -69,7 +74,7 @@ def login():
 
 
 # Get User Profile (By ID)
-@user_routes.route('/user-profile/<int:user_id>', methods=['GET'])
+@user_routes.route('/api/user-profile/<int:user_id>', methods=['GET'])
 def user_profile(user_id):
     user = User.query.get(user_id)
     
@@ -84,7 +89,7 @@ def user_profile(user_id):
     }), 200
 
 # Get All Users (For Bosses Only)
-@user_routes.route('/manage-users', methods=['GET'])
+@user_routes.route('/api/manage-users', methods=['GET'])
 def manage_users():
     users = User.query.all()
     return jsonify([

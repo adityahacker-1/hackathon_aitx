@@ -1,0 +1,20 @@
+# fly.toml app configuration file generated for flask-backend-adea on 2025-03-06T16:19:39-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'flask-backend-adea'
+primary_region = 'lax'
+
+[build]
+
+[http_service]
+  internal_port = 5500
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  size = 'shared-cpu-1x'

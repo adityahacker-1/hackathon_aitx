@@ -1,29 +1,35 @@
-# Step 1: Use Node.js as the base image
+# Use Node.js for building Next.js app
 FROM node:18 AS builder
-
-# Step 2: Set the working directory
 WORKDIR /app
 
-# Step 3: Copy package.json and package-lock.json first
+# Copy package.json and package-lock.json first (for better caching)
 COPY package.json package-lock.json ./
 
-# Step 4: Install dependencies
+# Install dependencies
 RUN npm install
 
-# Step 5: Copy the rest of the frontend files
+# Copy the rest of the frontend files
 COPY . .
 
-# Step 6: Build the Next.js application
+# ✅ Set NEXT_PUBLIC_API_BASE_URL explicitly during build
+ARG NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+
+# Build the Next.js application
 RUN npm run build
 
-# Step 7: Use a minimal Node.js image for production
+# Use a smaller production image
 FROM node:18 AS runner
 WORKDIR /app
 
+# Copy built files from builder stage
 COPY --from=builder /app ./
+
+# ✅ Set NEXT_PUBLIC_API_BASE_URL explicitly for runtime
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 
 # Expose the Next.js port
 EXPOSE 3000
 
-# Run Next.js in standalone mode
+# Start the Next.js server
 CMD ["npm", "start"]
