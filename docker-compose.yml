@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./backend:/app
+      - ./backend/instance:/app/instance  # Ensures SQLite database is persistent
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///instance/site.db  # Ensures Flask uses the correct SQLite path
+    depends_on: []
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
