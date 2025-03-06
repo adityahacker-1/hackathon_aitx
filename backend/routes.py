@@ -2,40 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User
-# from llama_stack.distribution.library_client import LlamaStackAsLibraryClient
 import os
 
 user_routes = Blueprint("user_routes", __name__)
-# chat_routes = Blueprint("chat_routes", __name__)  # ✅ Separate Blueprint for Chatbot
-
-# reomved ai for now
-# # 🛡️ AI Chatbot Configuration
-# os.environ["TOGETHER_API_KEY"] = "92760053459023b911f16abcad212847fd3e4099dd8f1297a36557e262b0140a"  # Replace with actual key
-# client = LlamaStackAsLibraryClient("together")
-# client.initialize()
-# model_id = "meta-llama/Llama-3.3-70B-Instruct"
-
-# # ✅ Chatbot API
-# @chat_routes.route('/chat', methods=['POST'])
-# @cross_origin()
-# def chat():
-#     data = request.get_json()
-#     user_message = data.get("message", "")
-
-#     if not user_message:
-#         return jsonify({"response": "Error: No message provided."})
-
-#     response = client.inference.chat_completion(
-#         model_id=model_id,
-#         messages=[
-#             {"role": "system", "content": "You are a knowledgeable AI assistant on Hindu rituals."},
-#             {"role": "user", "content": user_message},
-#         ],
-#         sampling_params={"max_tokens": 1000}
-#     )
-
-#     return jsonify({"response": response.completion_message.content})
-
 
 @user_routes.route('/register', methods=['POST'])
 @cross_origin()
