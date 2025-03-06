@@ -8,6 +8,8 @@ app = Flask(__name__)
 
 # CORS can be removed when using NGINX proxy
 # CORS(app, supports_credentials=True)
+CORS(app, origins=["https://your-frontend.onrender.com"])
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = 'your_secret_key'

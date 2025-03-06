@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
-  // Not actually needed with nginx, but you can use this for local testing if necessary
+  output: 'standalone',  // Use standalone mode for deployment
+  reactStrictMode: true,
   async rewrites() {
       return [
           {
               source: '/api/:path*',
-              destination: 'http://localhost:5500/api/:path*',
+              destination: `${process.env.NEXT_PUBLIC_API_BASE_URL}/:path*`,
           },
       ]
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
