@@ -5,7 +5,7 @@ COPY frontend/ .
 RUN npm install && npm run build
 
 # Step 2: Build the Backend
-FROM python:3.9 AS backend-build
+FROM python:3.10 AS backend-build
 WORKDIR /app/backend
 COPY backend/ .
 RUN pip install -r requirements.txt
