@@ -121,7 +121,6 @@ pydantic-settings==2.8.1
 pydantic_core==2.27.2
 Pygments==2.19.1
 pymongo==4.11.1
-PyMuPDF==1.25.3
 pyparsing==3.2.1
 pypdf==5.3.0
 PyPika==0.48.9

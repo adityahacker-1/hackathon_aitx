@@ -51,7 +51,7 @@ export default function UserRegistrationForm() {
       console.log("Submitting registration form:", values); // ✅ Debugging Log
   
       // ✅ Send registration request to Flask backend
-      const response = await axios.post("http://127.0.0.1:5000/register", values, {
+      const response = await axios.post("/api/register", values, {
         headers: { "Content-Type": "application/json" },
       });
   
